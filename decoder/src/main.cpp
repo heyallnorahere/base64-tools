@@ -55,15 +55,15 @@ int32_t main(int32_t argc, const char** argv) {
     cxxopts::Options options(BINARY_NAME);
     options.allow_unrecognised_options(); // to allow base64 input
     options.add_options()
-        ("o,to-file", "Write output to a file.", cxxopts::value<std::string>())
-        ("f,from-file", "Read inputs from a file.", cxxopts::value<std::string>())
-        ("l,remove-linebreaks", "Remove linebreaks the from passed data.", cxxopts::value<bool>()->default_value("false"))
-        ("h,help", "Shows this dialog.", cxxopts::value<bool>()->default_value("false"))
-        ("e,print-encoded", "Prints the encoded data before the decoded text.", cxxopts::value<bool>()->default_value("false"));
+        ("o,to-file", "Writes outputs to a file.", cxxopts::value<std::string>())
+        ("f,from-file", "Reads inputs from a file.", cxxopts::value<std::string>())
+        ("l,remove-linebreaks", "Removes linebreaks from the passed data.", cxxopts::value<bool>()->default_value("false"))
+        ("p,print-encoded", "Prints the encoded data before the decoded text.", cxxopts::value<bool>()->default_value("false"))
+        ("h,help", "Displays this dialog.", cxxopts::value<bool>()->default_value("false"));
     auto result = options.parse(argc, argv);
     if (result["h"].as<bool>()) {
         std::cout << options.help() << std::endl;
-        return 1;
+        return EXIT_FAILURE;
     }
     std::vector<std::string> inputs;
     if (result["f"].count() > 0) {
@@ -78,9 +78,9 @@ int32_t main(int32_t argc, const char** argv) {
     }
     if (inputs.size() > 0) {
         std::shared_ptr<writer> writer_instance;
-        bool print_encoded = result["e"].as<bool>();
+        bool print_encoded = result["p"].as<bool>();
         if (result["o"].count() > 0) {
-            writer_instance = std::make_shared<file_writer>(result["f"].as<std::string>(), print_encoded);
+            writer_instance = std::make_shared<file_writer>(result["o"].as<std::string>(), print_encoded);
         } else {
             writer_instance = std::make_shared<stdout_writer>(print_encoded);
         }
