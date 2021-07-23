@@ -1,0 +1,30 @@
+name: ci
+on: [ push ]
+jobs:
+  test:
+    runs-on: ${{ matrix.os-name }}-latest
+    strategy:
+      matrix:
+        os-name: [ ubuntu, macos, windows ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install ubuntu dependencies
+        if: ${{ matrix.os-name == 'ubuntu' }}
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake
+      - name: install macos dependencies
+        if: ${{ matrix.os-name == 'macos' }}
+        shell: bash
+        run: |
+          brew install cmake
+      - name: configure
+        shell: bash
+        run: |
+          cmake . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: build!
+        shell: bash
+        run: |
+          cmake --build build --config Release

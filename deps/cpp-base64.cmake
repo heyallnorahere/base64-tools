@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 include(FetchContent)
-FetchContent_Declare(cpp-base64 GIT_REPOSITORY git@github.com:ReneNyffenegger/cpp-base64)
+FetchContent_Declare(cpp-base64 GIT_REPOSITORY https://github.com/ReneNyffenegger/cpp-base64.git)
 FetchContent_GetProperties(cpp-base64)
 if(NOT cpp-base64_POPULATED)
     FetchContent_Populate(cpp-base64)
