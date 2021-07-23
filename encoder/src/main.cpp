@@ -47,6 +47,7 @@ int32_t main(int32_t argc, const char** argv) {
     options.add_options()
         ("o,to-file", "Writes outputs to a file.", cxxopts::value<std::string>())
         ("f,from-file", "Reads inputs from a file.", cxxopts::value<std::string>())
+        ("s,from-stdin", "Reads from standard input. Overrides -f.", cxxopts::value<bool>()->default_value("false"))
         ("u,url", "Specifies that the passed data is a URL.", cxxopts::value<bool>()->default_value("false"))
         ("p,print-original", "Prints the input as well as the output for each entry.", cxxopts::value<bool>()->default_value("false"))
         ("h,help", "Displays this dialog.", cxxopts::value<bool>()->default_value("false"));
@@ -56,7 +57,12 @@ int32_t main(int32_t argc, const char** argv) {
         return EXIT_FAILURE;
     }
     std::vector<std::string> inputs;
-    if (result["f"].count() > 0) {
+    if (result["s"].as<bool>()) {
+        std::string line;
+        while (std::getline(std::cin, line)) {
+            inputs.push_back(line);
+        }
+    } else if (result["f"].count() > 0) {
         std::ifstream input_file(result["f"].as<std::string>(), std::ios::binary);
         std::string line;
         while (std::getline(input_file, line)) {
